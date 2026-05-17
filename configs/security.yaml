@@ -1,0 +1,74 @@
+security:
+  enabled: true
+  fail_closed: true
+  allow_anonymous: false
+  require_credential_ref: true
+  allow_expired_credentials: false
+
+auth:
+  max_metadata_keys: 64
+  credential_references_only: true
+  raw_secret_storage_allowed: false
+
+permissions:
+  default_decision: DENY
+  deny_overrides_allow: true
+  require_authenticated_actor: true
+  max_permissions: 1024
+
+secrets:
+  raw_secret_values_allowed: false
+  allow_duplicate_secret_keys: false
+  reject_expired: true
+  max_secrets: 10000
+  allowed_reference_suffixes:
+    - _REF
+    - _ref
+
+sandbox:
+  default_decision: DENY
+  max_operations: 128
+  blocked_capabilities:
+    - FILE_READ
+    - FILE_WRITE
+    - NETWORK
+    - SUBPROCESS
+    - DATABASE
+    - ENVIRONMENT
+    - IMPORT_EXTERNAL
+    - LLM_CALL
+
+redaction:
+  enabled: true
+  mode: STRICT
+  replacement: "[REDACTED]"
+  max_depth: 16
+  sensitive_keys:
+    - password
+    - raw_password
+    - secret
+    - raw_secret
+    - api_key
+    - token
+    - access_token
+    - refresh_token
+    - private_key
+    - credential
+    - M_t
+    - Mt
+    - semantic_state
+    - runtime_semantic_state
+
+validation:
+  require_authenticated_actor: true
+  require_non_expired_envelope: true
+  require_permissions: true
+  block_critical_risk: true
+  redact_before_validation: true
+
+boundaries:
+  security_calls_external_provider: false
+  security_stores_raw_passwords: false
+  security_exposes_secrets: false
+  security_writes_persistence: false
+  security_persists_mt: false

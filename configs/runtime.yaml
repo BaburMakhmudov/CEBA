@@ -1,0 +1,57 @@
+runtime:
+  engine:
+    require_context_before_run: true
+    allow_rerun_after_terminal_cycle: false
+    stop_on_blocked_cycle: true
+    stop_on_failed_cycle: true
+
+  cycle:
+    require_invariants_before_cycle: true
+    require_schedule: true
+    require_transaction: true
+    create_checkpoint_on_complete: true
+    create_checkpoint_on_failure: true
+    allow_schedule_warnings: true
+
+  scheduler:
+    max_tasks: 1024
+    allow_empty_schedule: false
+    deterministic_ordering: true
+
+  transaction:
+    allow_empty_transaction: false
+    max_steps: 1024
+    fail_closed: true
+
+  checkpoints:
+    enabled: true
+    create_on_complete: true
+    create_on_failure: true
+    max_checkpoints: 10000
+
+invariants:
+  WORLD_MODEL_BEFORE_DELTA:
+    enabled: true
+    severity: ERROR
+  DELTA_ONLY_WRITER:
+    enabled: true
+    severity: ERROR
+  M_T_NOT_PERSISTED:
+    enabled: true
+    severity: ERROR
+  VECTOR_DB_NOT_MEMORY:
+    enabled: true
+    severity: ERROR
+  STM_NOT_DATABASE:
+    enabled: true
+    severity: ERROR
+  TEMPERATURE_NOT_MEMORY:
+    enabled: true
+    severity: ERROR
+
+boundaries:
+  runtime_executes_world_model_prediction_directly: false
+  runtime_computes_delta_directly: false
+  runtime_writes_memory_directly: false
+  runtime_writes_persistence_directly: false
+  runtime_calls_llm: false

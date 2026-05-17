@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ceba-postgres
+    environment:
+      POSTGRES_DB: ${CEBA_POSTGRES_DATABASE:-ceba}
+      POSTGRES_USER: ${CEBA_POSTGRES_USER:-ceba}
+      POSTGRES_PASSWORD: ${CEBA_POSTGRES_PASSWORD_REF:-ceba_local_password_ref}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ceba_postgres_data:/var/lib/postgresql/data
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: ceba-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ceba_qdrant_data:/qdrant/storage
+
+  neo4j:
+    image: neo4j:5
+    container_name: ceba-neo4j
+    environment:
+      NEO4J_AUTH: ${CEBA_NEO4J_USER_REF:-neo4j}/${CEBA_NEO4J_PASSWORD_REF:-ceba_local_password_ref}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ceba_neo4j_data:/data
+
+volumes:
+  ceba_postgres_data:
+  ceba_qdrant_data:
+  ceba_neo4j_data:

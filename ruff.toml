@@ -1,0 +1,18 @@
+line-length = 100
+target-version = "py311"
+src = ["src", "scripts"]
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "C4", "PT", "RET", "ARG", "PTH"]
+
+[lint.per-file-ignores]
+"scripts/*.py" = ["T201"]

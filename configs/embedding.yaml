@@ -1,0 +1,27 @@
+embedding:
+  enabled: true
+  model_ref: paraphrase-multilingual-mpnet-base-v2
+  provider: sentence_transformers
+  source_dimension: 768
+  projected_dimension: 256
+  normalize_vectors: true
+  cache_enabled: true
+
+projection:
+  enabled: true
+  method: linear_projection
+  initialization: xavier_uniform
+  output_dimension: 256
+  enforce_finite_values: true
+
+manifold_projection:
+  enabled: true
+  target_space: unit_sphere
+  tolerance: 0.000001
+
+boundaries:
+  embedding_is_memory: false
+  embedding_writes_ledger: false
+  embedding_computes_delta: false
+  embedding_infers_telos: false
+  embedding_persists_mt: false

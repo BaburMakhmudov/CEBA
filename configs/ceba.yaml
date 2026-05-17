@@ -1,0 +1,42 @@
+app:
+  name: ceba
+  full_name: Constrained Energy-Based Agent
+  environment: local
+  version_source: package
+  strict_mode: true
+
+ontology:
+  chain:
+    - difference
+    - constraint
+    - metric
+    - dynamics
+    - regulation
+    - telos
+    - valuation
+    - relation
+    - meaning_state_stabilization
+  execution_note: runtime_execution_order_may_differ_from_ontological_dependency_order
+
+invariants:
+  world_model_before_delta: true
+  delta_only_writer: true
+  mt_not_persisted: true
+  vector_db_not_memory: true
+  stm_not_database: true
+  temperature_not_memory: true
+
+boundaries:
+  input_infers_meaning: false
+  parser_infers_telos: false
+  embedding_is_memory: false
+  vector_db_is_memory: false
+  graph_db_is_memory: false
+  canonical_ledger_is_memory: false
+  mt_persistence_enabled: false
+  demo_mode_enabled: false
+
+runtime:
+  default_timezone: UTC
+  deterministic_coordination: true
+  fail_closed_on_invariant_error: true

@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ceba"
+version = "0.1.0"
+description = "Constrained Energy-Based Agent runtime architecture"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { file = "LICENSE" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.8",
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "C4", "PT", "RET", "ARG", "PTH"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*.py" = ["T201"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+warn_return_any = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+no_implicit_optional = true
+check_untyped_defs = true
+mypy_path = "src"
+ignore_missing_imports = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
+markers = [
+    "integration: integration boundary tests",
+    "invariant: architectural invariant tests",
+    "unit: unit tests",
+]

@@ -1,0 +1,39 @@
+graph_store:
+  enabled: true
+  default_backend: NEO4J
+  graph_name: ceba_graph_surface
+  status: CREATED
+
+backends:
+  neo4j:
+    enabled: true
+    graph_name: ceba_graph_surface
+    endpoint_ref: CEBA_NEO4J_ENDPOINT_REF
+    user_ref: CEBA_NEO4J_USER_REF
+    password_ref: CEBA_NEO4J_PASSWORD_REF
+
+repositories:
+  concept_repository:
+    enabled: true
+    max_concepts: 100000
+    allow_duplicate_concept_keys: false
+    reject_empty_payload: true
+
+  relation_repository:
+    enabled: true
+    max_relations: 100000
+    allow_duplicate_relation_keys: false
+    reject_empty_payload: true
+
+  activation_repository:
+    enabled: true
+    max_activations: 100000
+    allow_duplicate_activation_keys: false
+    reject_zero_activation: false
+
+boundaries:
+  graph_db_is_memory: false
+  graph_db_is_source_of_truth: false
+  graph_db_persists_mt: false
+  relation_runtime_is_graph_db: false
+  canonical_ledger_is_source_of_truth: true

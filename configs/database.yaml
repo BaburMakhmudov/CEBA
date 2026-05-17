@@ -1,0 +1,39 @@
+postgres:
+  enabled: true
+  host: localhost
+  port: 5432
+  database: ceba
+  user: ceba
+  password_ref: CEBA_POSTGRES_PASSWORD_REF
+  ssl_mode: PREFER
+  connect_timeout_seconds: 10
+  application_name: ceba
+
+schema:
+  name: ceba
+  version: 1
+  create_semantic_state_table: false
+  create_runtime_semantic_state_table: false
+  create_stm_database_table: false
+
+tables:
+  canonical_ledger_records: true
+  ledger_trace_records: true
+  ledger_event_records: true
+  ledger_decision_records: true
+  ledger_constraint_records: true
+  ledger_telos_records: true
+  ledger_audit_records: true
+  metric_snapshots: true
+  outbox_events: true
+
+jsonb:
+  reject_runtime_semantic_state_keys: true
+  reject_secret_material_keys: true
+
+transactions:
+  isolation_level: READ_COMMITTED
+  max_operations: 1024
+  allow_empty_transaction: false
+  allow_select_operations: true
+  block_forbidden_runtime_state: true

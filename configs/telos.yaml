@@ -1,0 +1,34 @@
+telos:
+  enabled: true
+  state_enabled: true
+  vector_enabled: true
+  attractor_enabled: true
+  alignment_enabled: true
+  priority_enabled: true
+  validation_enabled: true
+
+policy:
+  require_telos_id: true
+  require_priority_weights: true
+  require_finite_values: true
+  normalize_priority_weights: true
+  min_alignment_score: 0.0
+  max_alignment_score: 1.0
+
+attractor:
+  enabled: true
+  allow_unknown_attractor: false
+  stability_threshold: 0.7
+
+priority:
+  default_priority: 1.0
+  min_priority: 0.0
+  max_priority: 1.0
+
+boundaries:
+  telos_is_string_list: false
+  telos_is_parser_output: false
+  telos_is_memory: false
+  telos_is_persistence: false
+  telos_computes_delta: false
+  telos_persists_mt: false

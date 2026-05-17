@@ -1,0 +1,43 @@
+logging:
+  level: INFO
+  format: json
+  component: ceba
+  include_timestamp: true
+  include_request_id: true
+  include_trace_id: true
+  include_metadata: true
+
+redaction:
+  enabled: true
+  replacement: "[REDACTED]"
+  forbidden_secret_keys:
+    - password
+    - raw_password
+    - secret
+    - raw_secret
+    - api_key
+    - token
+    - access_token
+    - refresh_token
+    - private_key
+    - credential
+  forbidden_runtime_state_keys:
+    - M_t
+    - Mt
+    - semantic_state
+    - runtime_semantic_state
+
+observability:
+  log_buffer:
+    max_records: 100000
+    drop_debug: false
+    drop_unknown: false
+  metrics:
+    max_samples: 100000
+    drop_unknown_metrics: false
+  tracing:
+    max_spans: 100000
+    allow_orphan_spans: false
+  health:
+    max_checks: 10000
+    allow_unknown: true

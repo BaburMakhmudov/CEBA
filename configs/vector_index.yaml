@@ -1,0 +1,44 @@
+vector_index:
+  enabled: true
+  default_backend: QDRANT
+  dimension: 256
+  distance_metric: COSINE
+  collection_name: ceba_vector_surface
+  status: CREATED
+
+backends:
+  qdrant:
+    enabled: true
+    collection_name: ceba_vector_surface
+    dimension: 256
+    distance_metric: COSINE
+    endpoint_ref: CEBA_QDRANT_ENDPOINT_REF
+
+  pgvector:
+    enabled: false
+    table_name: ceba_vector_surface
+    vector_column: embedding
+    dimension: 256
+    distance_metric: COSINE
+
+  lance:
+    enabled: false
+    dataset_uri_ref: CEBA_LANCE_DATASET_URI_REF
+    table_name: ceba_vector_surface
+    vector_column: embedding
+    dimension: 256
+    distance_metric: COSINE
+
+policy:
+  max_points: 1000000
+  allow_stale_points: false
+  allow_deleted_points: false
+  allow_invalid_points: false
+  min_match_score: 0.0
+  require_dimension_match: true
+
+boundaries:
+  vector_db_is_memory: false
+  vector_db_is_source_of_truth: false
+  vector_db_persists_mt: false
+  canonical_ledger_is_source_of_truth: true

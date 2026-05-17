@@ -1,0 +1,28 @@
+constraints:
+  enabled: true
+  registry_enabled: true
+  fail_closed_on_invalid_constraint: true
+  max_constraints: 10000
+
+evaluation:
+  require_constraint_id: true
+  require_constraint_kind: true
+  require_finite_scores: true
+  probability_min: 0.0
+  probability_max: 1.0
+
+constraint_kinds:
+  numeric: true
+  symbolic: true
+  structural: true
+  temporal: true
+  safety: true
+  provenance: true
+  unknown_allowed: false
+
+boundaries:
+  constraints_are_persistence: false
+  constraints_write_memory: false
+  constraints_compute_delta: false
+  constraints_infer_telos: false
+  constraints_persist_mt: false
