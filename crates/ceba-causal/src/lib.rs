@@ -177,9 +177,20 @@ impl HiddenWorld{
             .map(str::to_string).collect::<Vec<_>>();
         let labels=(0..5).map(|i|format!("unknown_operation_{i}")).collect::<Vec<_>>();
         let mut mapping=BTreeMap::new();
-        let offset=(seed%5) as usize;
+        // All 5P3 = 60 distinct injective action mappings are available.
+        // The first 40 seeds therefore exercise 40 genuinely different worlds.
+        let mut assignments=Vec::new();
+        for a in 0..5{
+            for b in 0..5{
+                if b==a {continue;}
+                for c in 0..5{
+                    if c!=a && c!=b {assignments.push([a,b,c]);}
+                }
+            }
+        }
+        let assignment=assignments[(seed as usize)%assignments.len()];
         for (i,name) in names.iter().enumerate(){
-            mapping.insert(labels[(i+offset)%5].clone(),name.clone());
+            mapping.insert(labels[assignment[i]].clone(),name.clone());
         }
         Self{properties:names,actions:labels,mapping}
     }
