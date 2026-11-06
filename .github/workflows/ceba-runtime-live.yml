@@ -1,0 +1,61 @@
+name: CEBA live Rust NATS PostgreSQL integration
+
+on:
+  push:
+    branches: ["build/ceba-runnable-runtime"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ceba
+          POSTGRES_USER: ceba
+          POSTGRES_PASSWORD: ceba_dev_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ceba -d ceba"
+          --health-interval 2s --health-timeout 2s --health-retries 15
+    env:
+      DATABASE_URL: postgres://ceba:ceba_dev_only@localhost:5432/ceba
+      NATS_URL: nats://localhost:4222
+      CEBA_RESET: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Start NATS JetStream with file persistence
+        run: |
+          docker run -d --name ceba-nats -p 4222:4222 nats:2.11-alpine -js
+          for i in $(seq 1 30); do
+            if bash -c 'echo > /dev/tcp/127.0.0.1/4222' 2>/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Unit test actual Rust core and event dependency graph
+        run: |
+          cargo test --manifest-path crates/ceba-causal/Cargo.toml
+          cargo test --manifest-path crates/ceba-runtime/Cargo.toml
+      - name: Run persisted event-driven cognitive cycle
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          cargo run --manifest-path crates/ceba-runtime/Cargo.toml --release | tee artifacts/live-runtime.json
+      - name: Prove restart recovery (without resetting DB)
+        env:
+          CEBA_RESET: '0'
+        run: |
+          set -o pipefail
+          cargo run --manifest-path crates/ceba-runtime/Cargo.toml --release | tee artifacts/restart-replay.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ceba-live-runtime
+          path: artifacts/
+          if-no-files-found: warn

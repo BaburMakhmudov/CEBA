@@ -1,0 +1,17 @@
+[package]
+name = "ceba-runtime"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+ceba-causal = { path = "../ceba-causal" }
+tokio = { version = "1.44", features = ["full"] }
+tokio-postgres = "0.7"
+async-nats = { version = "0.50", features = ["jetstream"] }
+futures-util = "0.3"
+anyhow = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+blake3 = "1.5"
+uuid = { version = "1.13", features = ["v7"] }

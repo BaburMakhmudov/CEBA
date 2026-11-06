@@ -1,0 +1,32 @@
+name: CEBA causal goal Rust verification
+
+on:
+  push:
+    branches:
+      - experiment/ceba-causal-goal
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  causal-goal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run five Rust causal endogeneity tests
+        run: cargo test --manifest-path crates/ceba-causal/Cargo.toml -- --nocapture
+      - name: Execute 120 opaque-action and replay experiments
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          cargo run --quiet --manifest-path crates/ceba-causal/Cargo.toml --release | tee artifacts/causal_goal.json
+      - name: Preserve actual test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ceba-causal-goal-evidence
+          path: artifacts/
+          if-no-files-found: warn
