@@ -1,0 +1,40 @@
+name: Real pretrained Qwen3 state probe
+
+on:
+  push:
+    branches:
+      - experiment/qwen3-real-model
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qwen3-real-weights:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU PyTorch and Transformers
+        run: |
+          python -m pip install -U pip
+          python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install transformers==4.57.1 safetensors huggingface_hub
+      - name: Load genuine weights, run inference, verify state history and replay
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          HF_HUB_DOWNLOAD_TIMEOUT: '120'
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          python experiments/qwen3_real_weights_probe.py | tee artifacts/qwen3_probe.json
+      - name: Upload actual probe output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwen3-real-weights-results
+          path: artifacts/
+          if-no-files-found: warn
