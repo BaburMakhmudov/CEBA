@@ -185,7 +185,7 @@ async fn goal_worker(db_url:String,consumer:consumer::PullConsumer,world:HiddenW
             }
             make_valid(&pg,snapshot.version).await?;
         }
-        msg.ack().await?;
+        msg.ack().await.map_err(|e|anyhow!(e.to_string()))?;
     }
     Ok(())
 }
@@ -212,7 +212,7 @@ async fn action_worker(db_url:String,consumer:consumer::PullConsumer,world:Hidde
                 tx.commit().await?;
             }
         }
-        msg.ack().await?;
+        msg.ack().await.map_err(|e|anyhow!(e.to_string()))?;
     }
     Ok(())
 }
