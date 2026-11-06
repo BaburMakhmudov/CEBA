@@ -1,0 +1,9 @@
+FROM rust:1.91-bookworm AS build
+WORKDIR /app
+COPY crates/ceba-causal crates/ceba-causal
+COPY crates/ceba-runtime crates/ceba-runtime
+RUN cargo build --release --manifest-path crates/ceba-runtime/Cargo.toml
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/crates/ceba-runtime/target/release/ceba-runtime /usr/local/bin/ceba-runtime
+ENTRYPOINT ["ceba-runtime"]
